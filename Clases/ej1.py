@@ -32,3 +32,17 @@ class CuentaCorriente:
     def __str__(self):
         cadena = "Dni: " + self.dni + ", nombre: " + self.nombre + ", saldo: " + self.saldo
         print(cadena)
+    
+    def __eq__(self, objeto):
+        iguales = False
+        if self.dni == objeto.dni:
+            iguales = True
+        return iguales
+
+    def __lt__(self, objeto):
+        menor = False
+        if self.saldo < objeto.saldo:
+            menor = True
+        return menor
+    
+    
