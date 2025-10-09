@@ -101,17 +101,83 @@ def mi_funcion(param2, param1="hola"):
     print(param1, param2)
     return param1
 
-# COLECCIONES
+# COLECCIONES LISTAS
 lista = [True, "", 2, [1,2]]
 lista[1] = "hola"
-lista[3, 1]
+#lista[3, 1]
 lista[-2]
 lista[0:3] # -1 # oncepto llamado slicing o particionado, que nos devuelve porciones de listas
 lista = [10, 20, 30]
 lista[1:4:2] # 20
-lista[0:2] = [1, 2] # modifica la lista
-lista[0:2] = 2 # modifica la lista y su tamaño
+#lista[0:2] = [1, 2] # modifica la lista
+#lista[0:2] = 2 # modifica la lista y su tamaño
+# funciones --> pg 27 y 28
 
+# COLECCIONES TUPLAS
+# se le aplica todo lo anterior de las listas
+# debe tener dos elementos para que se considere tupla
+tupla = (1, "hola", False, 123)
+# Las tuplas son más “ligeras” que las listas, por lo que si el uso que le vamos a dar a una colección 
+# es muy básico, puedes utilizar tuplas en lugar de listas y ahorrar memoria. Ej. los días de la semana
+
+
+# COLECCIONES DICCIONARIOS
+# los diccionarios están compuestos por los tipos primitivos ya que no son mutables
+dic = {"C": 1999, "Python": 1823}
+#dic["C"] # Devuelve su valor pero si no lo encuentra da KeyError
+dic.get("C") # Si no lo encuentra devuelve None
+dic.get("C", "No encontrado") # Devuelve no encontrado
+# eliminar y obtener clave-valor, devuelve el valor asociado a la clave que se elimina, si no se encuentra KeyError
+dic.pop("C", "no encontrado")
+# buscar
+print("C" in dic) # devuelve true or false
+# añadir
+dic["Java"] = 2000
+# eliminar, no devuelve nada, si el elemento no existe da KeyError y no se soluciona
+#del dic["C"]
+# recorrer las claves o valores con un for
+for claves in dic: # o dic.keys()
+    print(claves)
+for valores in dic.values():
+    print(valores)
+# iteración de calve-valor
+for clave, valor in dic.items():
+    print(clave, "-->", valor)
 
 # MÁS
 # función type(variable)
+
+# CLASES
+from hola_mundo import *
+
+class Persona:
+    # Constructor
+    def __init__(self, nombre):
+        self.nombre = nombre
+    # Creamos los métodos, si algún método necesita self, se debe poner como el primer parámetro de entrada
+    # Métodos especiales:
+    def __str__(self):
+        cadena = self.nombre
+        return cadena
+    def __eq__(self, obj):
+        iguales = False
+        if self.nombre == obj.nombre:
+            iguales = True
+        return iguales
+    def __lt__(self, obj): # menor a mayor
+        menor = False
+        if self.nombre < obj.nombre:
+            menor = True
+        return menor
+
+obj = Persona("Laura")
+print(obj.nombre)
+
+# HERENCIA
+class Trabajador(Persona):
+    def __init__(self, nombre):
+        super().__init__(nombre)
+    def __str__(self):
+        return "hola"
+
+# FICHEROS LECTURA
