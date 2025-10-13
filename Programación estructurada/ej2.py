@@ -1,3 +1,4 @@
+# EJERCICIO 2
 # Pedir dos números y mostrarlos ordenados de menor a mayor.
 
 num1 = int(input('Introduce un número:'))

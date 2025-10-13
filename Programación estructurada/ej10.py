@@ -1,12 +1,9 @@
+# EJERCICIO 10
 # Diseñar una función que recibe como parámetros dos números enteros y devuelve el máximo de ambos.
 
 def mostrarMayor (numero1, numero2) :
-    if numero1 > numero2 :
-        print('numero1 es mayor')
-    elif numero2 > numero1 :
-        print('numero1 es menor')
-    else:
-        print('Son iguales')
+    lista = [numero1, numero2]
+    print(max(lista))
 
 
 numero1 = int(input('Di un numero'))
