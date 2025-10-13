@@ -1,0 +1,4 @@
+carlos 12 12
+ana 12 12
+hugo 23 12
+laura 48 21
