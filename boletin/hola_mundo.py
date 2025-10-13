@@ -5,10 +5,11 @@
 # Valores booleanos True o False
 # tuple, list, set
 # bytes, chr, ord
-nombre_usuario = str(input("Introduce tu nombre: "))
-print("Hola " + nombre_usuario)     # El + es para conectar cadenas 
-print("Hola", nombre_usuario)
-print(f"Hola buenas {nombre_usuario}")
+nombre_usuario = input("Introduce tu nombre: ")
+edad_usuario = int(input("Introduce tu edad: "))
+print("Hola " + nombre_usuario) # El + es para conectar cadenas 
+print("Hola", nombre_usuario)   # La , realiza un espacio
+print(f"Hola buenas {nombre_usuario} su edad es {edad_usuario}")
 
 # OPERADORES ARITMÉTICOS
 # +   -   *   **   /   //   %
@@ -21,6 +22,7 @@ print(f"Hola buenas {nombre_usuario}")
 cadena = "Hola buenas tardes"
 c = cadena*2
 print(c)
+a = "Hola " * 3
 
 long_string = "hola buenas amores mios"
 print(long_string[::-1])
@@ -47,28 +49,32 @@ word1 = "hola".capitalize()
 
 # SENTENCIAS CONDICIONALES CUIDADO CON LA IDENTACIÓN
 # IF
-if cadena == "hola":
-    print(cadena)
-elif cadena < "adios":
+num = 5
+if num == 5:
+    print("igual")
+elif num < 5:
     print("menor")
 else:
-    print("fin")
+    print("mayor")
 # A if C else B
 # se evalúa C si se cumple devuelve A sino B
-var = "par" if (1 < 2) else "impar"
+var = "par" if (num%2 == 0) else "impar"
 
 # BUCLES existe break y continue
 # WHILE
-while 1 > 2:
-    print("adios")
+while num > 2:
+    print(num)
+    num -= 1
 # FOR
 # básico
 for numero in [1, 2, 3, 4, 5]:
-    print(numero)
+    print("El número es", numero)
+for letra in "Python":
+    print(letra)
 # range()
-for i in range(5):
+for i in range(5):  # Del 0-4
     print(i)
-for i in range(0, 10, 2):
+for i in range(0, 10, 2): # Del 0-9 pasando 2
     print(i)
 # strings
 for letra in "Python":
@@ -80,9 +86,8 @@ for fruta in frutas:
     print("Me gusta la", fruta)
 # enumerate()
 nombres = ["Ana", "Luis", "Marta"]
-
 for indice, nombre in enumerate(nombres):
-    print(indice, nombre)
+    print(f"{indice} - Alumno: {nombre}")
 # anidados
 for i in range(3):
     for j in range(2):
@@ -92,6 +97,21 @@ for i in range(3):
     print(i)
 else:
     print("Bucle terminado sin break")
+numeros = [1, 3, 5, 7]
+for n in numeros:
+    print(n)
+    if n % 2 == 0:
+        print("Se encontró un número par")
+        break
+else:
+    print("No se encontraron números pares en la lista")
+
+while num > 2:
+    print(num)
+    num -= 1
+else:
+    print("Bucle terminado con éxito")
+
 
 
 # FUNCIONES
@@ -99,7 +119,9 @@ else:
 # asignados ningún valor, podemos llamar a la función con un parámetro ya q el segundo ya tiene un valor por defecto
 def mi_funcion(param2, param1="hola"):
     print(param1, param2)
-    return param1
+    return param1   # El return es opcional
+mi_funcion("Adiós")
+mi_funcion("Hola", "Adiós")
 
 # COLECCIONES LISTAS
 lista = [True, "", 2, [1,2]]
@@ -124,17 +146,29 @@ tupla = (1, "hola", False, 123)
 # COLECCIONES DICCIONARIOS
 # los diccionarios están compuestos por los tipos primitivos ya que no son mutables
 dic = {"C": 1999, "Python": 1823}
+
+
 #dic["C"] # Devuelve su valor pero si no lo encuentra da KeyError
 dic.get("C") # Si no lo encuentra devuelve None
 dic.get("C", "No encontrado") # Devuelve no encontrado
+
+
 # eliminar y obtener clave-valor, devuelve el valor asociado a la clave que se elimina, si no se encuentra KeyError
 dic.pop("C", "no encontrado")
+
+
 # buscar
 print("C" in dic) # devuelve true or false
+
+
 # añadir
 dic["Java"] = 2000
+
+
 # eliminar, no devuelve nada, si el elemento no existe da KeyError y no se soluciona
-#del dic["C"]
+del dic["C"]
+
+
 # recorrer las claves o valores con un for
 for claves in dic: # o dic.keys()
     print(claves)
@@ -148,7 +182,7 @@ for clave, valor in dic.items():
 # función type(variable)
 
 # CLASES
-from hola_mundo import *
+from nombre_fichero import *
 
 class Persona:
     # Constructor
@@ -172,12 +206,16 @@ class Persona:
 
 obj = Persona("Laura")
 print(obj.nombre)
+obj2 = Persona("Lucía")
+print(obj.__lt__(obj2))
 
 # HERENCIA
 class Trabajador(Persona):
     def __init__(self, nombre):
-        super().__init__(nombre)
+        super().__init__(nombre)    
+        # Llamar a funciones de la calse padre super()
     def __str__(self):
-        return "hola"
+        return "hola"   
+        # Sobreescribir un método de la clase padre
 
 # FICHEROS LECTURA
