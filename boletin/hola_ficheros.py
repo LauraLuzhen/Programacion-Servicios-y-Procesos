@@ -13,18 +13,8 @@ fichero.write("¿Qué tal?")
 fichero.close()
 """
 
-num_usuario = input("introduce un número entero: ")
-try:
-    valorInt = int(num_usuario)
-    print("Es entero")
-# Opción 1
-except Exception:
-    print("Error")
-
-try:
-    valorInt = int(num_usuario)
-    print("Es entero")
-# Opción 2
-except:
-    raise Exception("Error")
-
+fichero = open('texto.txt', 'w', encoding="utf8")
+fichero.write("Hola ")
+fichero.write("me llamo Laura.\n")
+fichero.write("¿Qué tal?")
+fichero.close()
