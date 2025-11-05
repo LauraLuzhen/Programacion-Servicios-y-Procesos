@@ -52,7 +52,7 @@ def add_director(pelicula: Pelicula):
     director_ids = [director.id for director in directors_list]
 
     if pelicula.idDirector not in director_ids:
-        raise HTTPException(status_code=500, detail="El id del director no se ha encontrado")
+        raise HTTPException(status_code=404, detail="El id del director no se ha encontrado")
     else:
         peliculas_list.append(pelicula)
         return pelicula

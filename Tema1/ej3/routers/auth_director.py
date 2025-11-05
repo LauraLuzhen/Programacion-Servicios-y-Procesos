@@ -18,7 +18,7 @@ ALGORITHM = "HS256"
 # Duración del token en minutos
 ACCESS_TOKEN_EXPIRE_MINUTES = 5
 # Objeto para hashear las contraseñas
-password_hash = PasswordHash().recommended()
+password_hash = PasswordHash.recommended()
 
 class Director(BaseModel):
     dni: str

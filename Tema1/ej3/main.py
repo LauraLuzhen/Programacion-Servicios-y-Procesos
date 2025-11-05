@@ -1,11 +1,13 @@
 from routers import pelicula, director, auth_director
 from fastapi import FastAPI
+from fastapi.staticfiles import StaticFiles
 
 app = FastAPI()
 
+app.mount("/static", StaticFiles(directory="static"), name="static")
 app.include_router(director.router)
 app.include_router(pelicula.router)
-app.include_router(auth_director.router)
+#app.include_router(auth_director.router)
 
 @app.get("/")
 def read_root():
