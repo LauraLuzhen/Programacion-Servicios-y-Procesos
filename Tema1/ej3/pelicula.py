@@ -3,7 +3,7 @@
 from http.client import HTTPException
 from fastapi import FastAPI
 from pydantic import BaseModel
-from director import Director, directors_list
+from ej3.director import Director, directors_list
 
 app = FastAPI()
 
