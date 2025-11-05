@@ -11,5 +11,5 @@ app.include_router(director.router)
 app.include_router(supermercado.router)
 
 @app.get("/")
-def read_root():
-    return {"Mensaje": "Api de director y supermercado"}
+def root():
+    return {"Mensaje": "API de director y supermercado"}

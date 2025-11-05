@@ -58,3 +58,30 @@ def add_libro(libro: Libro):
 # Método para conseguir el próximo id
 def next_id():
     return (max(libros_list, key=id).id+1)
+
+
+# PUT
+@router.put("/{id}", response_model=Libro)
+def modify_libro(id : int, libro : Libro):
+    for index, saved in enumerate(libros_list):
+        if saved.id == id:
+            libro.id = id
+            autores_id = [autor.id for autor in autores_list]
+            if libro.id_autor not in autores_id:
+                raise HTTPException(status_code=404, detail="El id del autor no existe")
+            else:
+                libros_list[index] = libro
+                return libro
+        else:
+            raise HTTPException(status_code=404, detail="Libro no encontrado")
+        
+
+# DELETE
+@router.delete("/{id}")
+def delete_libro(id : int):
+    for saved in libros_list:
+        if saved.id == id:
+            libros_list.remove(saved)
+            return {}
+        else:
+            raise HTTPException(status_code=404, detail="Libro no encontrado")
