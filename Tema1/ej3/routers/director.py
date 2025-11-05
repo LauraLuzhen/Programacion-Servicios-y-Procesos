@@ -1,11 +1,10 @@
 # Laura Luzhen Rodríguez Morán
 
-from http.client import HTTPException
-from fastapi import FastAPI
+from fastapi import APIRouter , HTTPException
 from pydantic import BaseModel
 
+router = APIRouter(prefix="/directors", tags=["directors"])
 
-app = FastAPI()
 
 class Director(BaseModel):
     id: int
@@ -24,7 +23,7 @@ directors_list = [
 
 # GET
 # Todos los directores
-@app.get("/directors")
+@router.get("/")
 def directors():
     return directors_list
 # Función para buscar director por id
@@ -35,11 +34,11 @@ def search_director(id: int):
         return directors
     raise HTTPException(status_code=404, detail="Director no encontrado")
 # Por el id
-@app.get("/directors/{id}")
+@router.get("/{id}")
 def director_id(id: int):
     return search_director(id)
 # Por query id
-@app.get("/directors/")
+@router.get("")
 def director_query(id: int):
     return search_director(id)
 
@@ -49,7 +48,7 @@ def director_query(id: int):
 def next_id():
     return (max(directors_list, key=id).id+1)
 # Realizamos el post
-@app.post("/directors", status_code=201, response_model=Director)
+@router.post("/", status_code=201, response_model=Director)
 def add_director(director: Director):
     director.id = next_id()
     directors_list.append(director)
@@ -57,7 +56,7 @@ def add_director(director: Director):
 
 
 # PUT
-@app.put("/directors/{id}", response_model=Director)
+@router.put("/{id}", response_model=Director)
 def modify_director(id: int, director: Director):
     for index, saved_director in enumerate(directors_list):
         if saved_director.id == id:
@@ -68,7 +67,7 @@ def modify_director(id: int, director: Director):
 
 
 # DELETE
-@app.delete("/directors/{id}")
+@router.delete("/{id}")
 def delete_director(id: int):
     for saved_director in directors_list:
         if saved_director.id == id:

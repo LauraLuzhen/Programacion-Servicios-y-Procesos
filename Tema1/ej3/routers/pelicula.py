@@ -1,11 +1,10 @@
 # Laura Luzhen Rodríguez Morán
 
-from http.client import HTTPException
-from fastapi import FastAPI
+from fastapi import APIRouter, HTTPException
 from pydantic import BaseModel
-from ej3.director import Director, directors_list
+from routers.director import directors_list
 
-app = FastAPI()
+router = APIRouter(prefix="/peliculas", tags=["peliculas"])
 
 class Pelicula(BaseModel):
     id: int
@@ -21,7 +20,7 @@ peliculas_list = [
 
 # GET
 # Todas las películas
-@app.get("/peliculas")
+@router.get("/")
 def peliculas():
     return peliculas_list
 # Función para buscar la película por id
@@ -32,11 +31,11 @@ def search_pelicula(id: int):
         return peliculas
     raise HTTPException(status_code=404, detail="Película no encontrada")
 # Por el id
-@app.get("/peliculas/{id}")
+@router.get("/{id}")
 def pelicula_id(id: int):
     return search_pelicula(id)
 # Por query id
-@app.get("/peliculas/")
+@router.get("/")
 def pelicula_query(id: int):
     return search_pelicula(id)
 
@@ -46,7 +45,7 @@ def pelicula_query(id: int):
 def next_id():
     return (max(peliculas_list, key=id).id+1)
 # Realizamos el post
-@app.post("/peliculas", status_code=201, response_model=Pelicula)
+@router.post("/", status_code=201, response_model=Pelicula)
 def add_director(pelicula: Pelicula):
     pelicula.id = next_id()
 
@@ -60,7 +59,7 @@ def add_director(pelicula: Pelicula):
 
 
 # PUT
-@app.put("/peliculas/{id}", response_model=Pelicula)
+@router.put("/{id}", response_model=Pelicula)
 def modify_pelicula(id: int, pelicula: Pelicula):
     for index, saved_pelicula in enumerate(peliculas_list):
         if saved_pelicula.id == id:
@@ -77,7 +76,7 @@ def modify_pelicula(id: int, pelicula: Pelicula):
 
 
 # DELETE
-@app.delete("/peliculas/{id}")
+@router.delete("/{id}")
 def delete_pelicula(id: int):
     for saved_pelicula in peliculas_list:
         if saved_pelicula.id == id:
