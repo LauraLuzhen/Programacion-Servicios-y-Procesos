@@ -1,6 +1,6 @@
 # DIRECTOR (Id, DNI, Nombre, Apellidos, Nacionalidad)
 
-from datetime import datetime, timedelta, timezone
+import datetime
 from pydantic import BaseModel
 import jwt
 from jwt.exceptions import InvalidTokenError
@@ -21,17 +21,17 @@ ACCESS_TOKEN_EXPIRE_MINUTES = 5
 # Objeto para hashear las contraseñas
 password_hash = PasswordHash.recommended()
 
-class Director(BaseModel):
+class User(BaseModel):
     dni: str
     nombre: str
     apellidos: str
     nacionalidad: str
     disabled: bool # Me permite saber si el us uario está activo o no
 
-class DirectorDB(Director):
+class UserDB(User):
     password: str
 
-directors_db = {
+users_db = {
     "laura": {
         "dni": "12345678A",
         "nombre": "Laura",
@@ -48,10 +48,10 @@ directors_db = {
         "disabled": True,
         "password": "secret2",
     },
-    "guille": {
-        "dni": "11223344C",
-        "nombre": "Guillermo",
-        "apellidos": "López Sánchez",
+    "Guillermo": {
+        "dni": "29519783L",
+        "nombre": "Guillermo Simón",
+        "apellidos": "Villanueva Sánchez",
         "nacionalidad": "argentina",
         "disabled": False,
         "password": "secret3",
@@ -59,20 +59,26 @@ directors_db = {
 }
 
 @router.post("/register", status_code=201)
-def register(director: DirectorDB):
-    if director.nombre not in directors_db:
-        hashed_password = password_hash.hash(director.password)
-        director.password = hashed_password
-        directors_db[director.nombre] = director
-        return director
-    raise HTTPException(status_code=409, detail="El director ya existe")
+def register(user: UserDB):
+    if user.nombre not in users_db:
+        hashed_password = password_hash.hash(user.password)
+        user.password = hashed_password
+        users_db[user.nombre] = user
+        return user
+    raise HTTPException(status_code=409, detail="El usuario ya existe")
 
+# Importamos el Depends del fastapi
 @router.post("/login")
 async def login(form: OAuth2PasswordRequestForm = Depends()):
-    username = directors_db.get(form.username)
-    if username:
+    user = users_db.get(form.username)
+    if user:
         #Si el usuario existe en la bd comprobamos la contraseña
-        if password_hash.verify(form.password, username["password"]):
+        if password_hash.verify(form.password, user["password"]):
             #Si la contraseña es correcta creamos el token
-            expire = datetime.now(timezone.utc) + timedelta(minutes=ACCESS_TOKEN_EXPIRE_MINUTES)
-            
+            expire = datetime.datetime.now(datetime.timezone.utc) + datetime.timedelta(minutes=ACCESS_TOKEN_EXPIRE_MINUTES)
+            access_token = {"sub": user.username, "exp": expire}
+            # generamos el token
+            token = jwt.encode(access_token, SECRET_KEY, algorithm=ALGORITHM)
+            return {"access_token": token, "token_type": "bearer"}
+        # raise HTTPException(status_code=401, detail="Contraseña incorrecta")
+    raise HTTPException(status_code=404, detail="El usuario no existe")
