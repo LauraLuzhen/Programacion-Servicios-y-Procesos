@@ -75,7 +75,7 @@ def supermarket_put(id : int, supermarket : Supermercado):
                 supermarkets_list[index] = supermarket
                 return supermarket
         else:
-            raise HTTPException(status_code=404, detail="El supermercado no encontrado")
+            raise HTTPException(status_code=404, detail="Supermercado no encontrado")
         
 
 # DELETE
@@ -86,4 +86,4 @@ def supermarket_delete(id : int):
             supermarkets_list.remove(saved)
             return {}
         else: 
-            raise HTTPException(status_code=404, detail="El supermercado no existe")
+            raise HTTPException(status_code=404, detail="Supermercado no encontrado")
