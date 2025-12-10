@@ -14,11 +14,11 @@ class Director(BaseModel):
     nacionalidad: str
 
 directors_list = [
-    Director(id=1, dni="11111111A", nombre="Hugo", apellidos="Domínguez Ferrer", nacionalidad="española"),
+    Director(id=1, dni="11111111A", nombre="Laura", apellidos="Rodríguez Morán", nacionalidad="española"),
     Director(id=2, dni="22222222B", nombre="Mohammed", apellidos="Alí Jhonson", nacionalidad="afroamericana"),
-    Director(id=3, dni="33333333C", nombre="Mike", apellidos="Tyson Rodríguez", nacionalidad="chino"),
-    Director(id=4, dni="44444444D", nombre="Nombre", apellidos="Apelli Dos", nacionalidad="teclado"),
-    Director(id=5, dni="55555555E", nombre="Hugo", apellidos="Otroaplli Dos", nacionalidad="teclado"),
+    Director(id=3, dni="33333333C", nombre="Guillermo", apellidos="Villanueva Roldán", nacionalidad="china"),
+    Director(id=4, dni="44444444D", nombre="Ana", apellidos="Apelli Dos", nacionalidad="española"),
+    Director(id=5, dni="55555555E", nombre="Hugo", apellidos="Apelli Dos", nacionalidad="española"),
 ]
 
 # GET

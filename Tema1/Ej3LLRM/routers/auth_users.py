@@ -1,84 +1,106 @@
-# DIRECTOR (Id, DNI, Nombre, Apellidos, Nacionalidad)
-
-import datetime
-from pydantic import BaseModel
-import jwt
-from jwt.exceptions import InvalidTokenError
-from pwdlib import PasswordHash
-from fastapi.security import OAuth2PasswordBearer, OAuth2PasswordRequestForm
+# pip install pyjwt
+from datetime import datetime, timedelta, timezone
 from fastapi import APIRouter, Depends, HTTPException
+from pydantic import BaseModel
+from fastapi.security import OAuth2PasswordBearer, OAuth2PasswordRequestForm
+
+# Librería JWT
+import jwt
+
+# Para trabajar las excepciones de los tokens
+from jwt.exceptions import PyJWTError
+
+# Librería para aplicar un hash a la contraseña
+from pwdlib import PasswordHash
+
+# Definimos el algoritmo de encriptación
+ALGORITHM = "HS256"
+
+# Duración del token
+ACCESS_TOKEN_EXPIRE_MINUTES = 1
+
+# Clave que se utilizará como semilla para generar el token
+# openssl rand -hex 32
+SECRET_KEY = "72fd45b13487001ab0d5f17b1a4b37711da8be523d5e60a18f82fc327632934a"
+
+# Objeto que se utilizará para el cálculo del hash y 
+# la verificación de las contraseñas
+password_hash = PasswordHash.recommended()
 
 router = APIRouter()
 oauth2 = OAuth2PasswordBearer(tokenUrl="login")
 
-# Cambiamos de terminal y ponemos: openssl rand -hex 32
-# Clave de cifrado del token
-SECRET_KEY = "0b39e375e88068503d4057f0a717bf1fa220c82341cd9cecf662820cba50d256"
-# Algoritmo de cifrado del token
-ALGORITHM = "HS256"
-# Duración del token en minutos
-ACCESS_TOKEN_EXPIRE_MINUTES = 5
-# Objeto para hashear las contraseñas
-password_hash = PasswordHash.recommended()
-
 class User(BaseModel):
-    dni: str
-    nombre: str
-    apellidos: str
-    nacionalidad: str
-    disabled: bool # Me permite saber si el us uario está activo o no
+    username: str
+    fullname:str
+    email:str
+    disabled: bool | None = False
 
 class UserDB(User):
-    password: str
+    hashed_password: str
 
-users_db = {
+fake_users_db = {
     "laura": {
-        "dni": "12345678A",
-        "nombre": "Laura",
-        "apellidos": "Rodríguez Morán",
-        "nacionalidad": "española",
-        "disabled": False,
-        "password": "secret1",
-    },
-    "juan": {
-        "dni": "87654321B",
-        "nombre": "Juan",
-        "apellidos": "Pérez Gómez",
-        "nacionalidad": "mexicana",
-        "disabled": True,
-        "password": "secret2",
-    },
-    "Guillermo": {
-        "dni": "29519783L",
-        "nombre": "Guillermo Simón",
-        "apellidos": "Villanueva Sánchez",
-        "nacionalidad": "argentina",
-        "disabled": False,
-        "password": "secret3",
+        "username": "Laura",
+        "fullname": "Laura Rodríguez Morán",
+        "email": "ll.rodriguez@iesnervion.es",
+        "hashed_password": password_hash.hash("1234"),
+        "disabled": False
     }
 }
 
-@router.post("/register", status_code=201)
-def register(user: UserDB):
-    if user.nombre not in users_db:
-        hashed_password = password_hash.hash(user.password)
-        user.password = hashed_password
-        users_db[user.nombre] = user
-        return user
-    raise HTTPException(status_code=409, detail="El usuario ya existe")
+def search_user_db(username: str):
+    if username in fake_users_db:
+        return UserDB(fake_users_db[username])
+    
 
-# Importamos el Depends del fastapi
+async def auth_user(token:str = Depends(oauth2)):    
+    exception = HTTPException(status_code=401, 
+                            detail="Credenciales de autenticación inválidas", 
+                            headers={"WWW-Authenticate" : "Bearer"})
+    try:        
+        username = jwt.decode(token, SECRET_KEY, algorithms=ALGORITHM).get("sub")
+        if username is None:
+            raise HTTPException(status_code=401, 
+                            detail="Credenciales de autenticación inválidas", 
+                            headers={"WWW-Authenticate" : "Bearer"})       
+    except PyJWTError:
+        raise HTTPException(status_code=401, 
+                            detail="Credenciales de autenticación inválidas", 
+                            headers={"WWW-Authenticate" : "Bearer"})
+    user = User(**fake_users_db[username])
+
+    if user.disabled:
+        raise HTTPException(status_code=400, 
+                            detail="Usuario inactivo")   
+    return user
+
+
+@router.post("/register", status_code=201)
+async def register_user(user: UserDB):
+    print("entro en el registro")
+    new_password = password_hash.hash(user.hashed_password)
+    user.hashed_password = new_password
+    fake_users_db[user.username] = user.model_dump()
+    return user
+
+
 @router.post("/login")
-async def login(form: OAuth2PasswordRequestForm = Depends()):
-    user = users_db.get(form.username)
-    if user:
-        #Si el usuario existe en la bd comprobamos la contraseña
-        if password_hash.verify(form.password, user["password"]):
-            #Si la contraseña es correcta creamos el token
-            expire = datetime.datetime.now(datetime.timezone.utc) + datetime.timedelta(minutes=ACCESS_TOKEN_EXPIRE_MINUTES)
-            access_token = {"sub": user.username, "exp": expire}
-            # generamos el token
-            token = jwt.encode(access_token, SECRET_KEY, algorithm=ALGORITHM)
-            return {"access_token": token, "token_type": "bearer"}
-        # raise HTTPException(status_code=401, detail="Contraseña incorrecta")
-    raise HTTPException(status_code=404, detail="El usuario no existe")
+async def login(form: OAuth2PasswordRequestForm = Depends()):    
+    user_db = fake_users_db.get(form.username)   
+    if not user_db:
+        raise HTTPException(status_code = 400, detail="Usuario no encontrado")
+    user = UserDB(**fake_users_db[form.username])
+
+    if not password_hash.verify(form.password, user.hashed_password):
+        raise HTTPException(status_code=400, detail="La contraseña no es correcta")  
+
+    expire = datetime.now(timezone.utc) + timedelta(minutes=ACCESS_TOKEN_EXPIRE_MINUTES)
+    access_token = {"sub" : user.username, "exp":expire}
+    token = jwt.encode(access_token, SECRET_KEY, algorithm=ALGORITHM)
+    return {"access_token" : token, "token_type": "bearer"}
+
+
+@router.get("/auth/me")
+async def me(user: User = Depends(auth_user)):
+    return user
