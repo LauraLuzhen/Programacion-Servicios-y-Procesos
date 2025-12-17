@@ -1,0 +1,6 @@
+# En este fichero indicaremos todas las librerías que hemos instalado en nuestro proyecto
+fastapi[standard]
+pyjwt
+pwdlib[argon2]
+pymongo
+python-multipart
