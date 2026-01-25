@@ -1,8 +1,6 @@
 # suma.py
-def suma_rango(a, b):
-    """Suma todos los números entre a y b inclusive, independientemente del orden."""
-    # Aseguramos que a sea menor que b
-    inicio = min(a, b)
-    fin = max(a, b)
-    total = sum(range(inicio, fin + 1))
-    print(f"Suma de {inicio} a {fin} = {total}")
+def suma(num_proceso, valor_compartido, lock, num):
+    with lock:  
+        valor_anterior = valor_compartido.value
+        valor_compartido.value += num
+        print(f"Proceso {num_proceso}: {valor_anterior} + {num} = {valor_compartido.value}")

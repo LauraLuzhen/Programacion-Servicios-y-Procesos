@@ -22,7 +22,7 @@ if __name__ == "__main__":
         with multiprocessing.Pool(processes=num_procesos) as pool:
             pool.map(
                 suma,
-                [(i, valor_compartido, lock, i) for i in range(1, n + 1)]
+                [(i, valor_compartido, lock, i) for i in range(1, num_procesos + 1)]
             )
 
         fin = time.time()
