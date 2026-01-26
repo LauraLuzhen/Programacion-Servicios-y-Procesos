@@ -4,8 +4,6 @@ from suma import suma
 import time
 
 if __name__ == "__main__":
-    print("SUMA DE RANGOS CON MULTIPROCESOS")
-
     n1 = int(input("Introduce el inicio del rango (n1): "))
     n2 = int(input("Introduce el fin del rango (n2): "))
 

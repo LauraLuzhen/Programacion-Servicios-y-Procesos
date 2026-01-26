@@ -1,8 +1,6 @@
 # suma.py
-def suma(args):
-    n, valor_compartido, lock, proceso_num = args
-
-    with lock:
-        anterior = valor_compartido.value
+def suma(n, valor_compartido, lock):
+    with lock:  
+        valor_anterior = valor_compartido.value
         valor_compartido.value += n
-        print(f"Proceso {proceso_num}: {anterior} + {n} = {valor_compartido.value}")
+        print(f"Proceso {n}: {valor_anterior} + {n} = {valor_compartido.value}")

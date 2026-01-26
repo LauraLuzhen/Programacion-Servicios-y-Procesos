@@ -1,6 +1,5 @@
 # suma.py
 def sumar_desde_pipe(pipe):
-    """Recibe números desde la pipe y hace la suma acumulativa."""
     total = 0
     proceso = 1
 

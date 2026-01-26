@@ -4,8 +4,6 @@ import multiprocessing
 from suma import suma
 
 if __name__ == "__main__":
-    print("SUMA CON MUNTIPROCESOS")
-    
     n = int(input("Introduce un número: "))
 
     inicio = time.time()
@@ -15,6 +13,8 @@ if __name__ == "__main__":
     lock = manager.Lock()
 
     procesos = []
+
+    print(f"Suma de 1 a {n}")
 
     for i in range(1, n + 1):
         p = multiprocessing.Process(target=suma, args=(i, valor_compartido, lock))

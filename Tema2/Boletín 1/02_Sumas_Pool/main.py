@@ -13,19 +13,16 @@ if __name__ == "__main__":
     print(f"Suma de 1 a {n}")
 
     for num_procesos in [1, 2, 4]:
-        print("\n-----------------------------")
-        print(f"Usando Pool con {num_procesos} procesos")
-
-        valor_compartido.value = 0  # reiniciamos la suma
+        valor_compartido.value = 0  
         inicio = time.time()
 
         with multiprocessing.Pool(processes=num_procesos) as pool:
-            pool.map(
+            pool.starmap(
                 suma,
-                [(i, valor_compartido, lock, i) for i in range(1, num_procesos + 1)]
+                [(i, valor_compartido, lock) for i in range(1, num_procesos + 1)]
             )
 
         fin = time.time()
 
         print(f"Suma total: {valor_compartido.value}")
-        print(f"Tiempo: {fin - inicio:.4f} segundos")
+        print(f"Tiempo: {fin - inicio:.2f} segundos")
