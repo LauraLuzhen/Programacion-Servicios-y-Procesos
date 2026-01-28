@@ -1,6 +1,5 @@
 # suma.py
 def sumar_desde_cola(cola):
-    """Toma rangos de la cola y suma todos los números entre ellos."""
     while True:
         rango = cola.get()
         if rango is None:

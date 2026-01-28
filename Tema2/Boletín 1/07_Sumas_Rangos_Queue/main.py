@@ -22,5 +22,5 @@ if __name__ == "__main__":
     p_suma.join()
 
     fin = time.time()
-    print(f"Todos los procesos han terminado")
+    
     print(f"Tiempo total de ejecución: {fin - inicio:.2f} segundos")

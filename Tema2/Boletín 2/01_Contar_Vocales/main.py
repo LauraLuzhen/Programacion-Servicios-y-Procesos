@@ -26,4 +26,4 @@ if __name__ == "__main__":
         print(f"La vocal '{vocal}' aparece {cantidad} veces.")
 
     fin = time.time()
-    print(f"Tiempo total de ejecución: {fin - inicio:.4f} segundos")
+    print(f"Tiempo total de ejecución: {fin - inicio:.2f} segundos")

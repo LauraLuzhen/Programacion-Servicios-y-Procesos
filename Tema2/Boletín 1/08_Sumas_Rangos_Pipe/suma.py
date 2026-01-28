@@ -1,6 +1,5 @@
 # suma.py
 def sumar_desde_pipe(pipe):
-    """Recibe rangos desde la Pipe y suma todos los números entre ellos."""
     while True:
         rango = pipe.recv()
         if rango is None:

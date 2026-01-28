@@ -24,4 +24,4 @@ if __name__ == "__main__":
     p3.join()
 
     fin = time.time()
-    print(f"Tiempo total de ejecución: {fin - inicio:.4f} segundos")
+    print(f"Tiempo total de ejecución: {fin - inicio:.2f} segundos")
